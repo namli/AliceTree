@@ -1,1 +1,3 @@
 [Статья](https://wiki.yaboard.com/s/ga)
+//defaul value
+0051000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff

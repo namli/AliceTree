@@ -18,6 +18,17 @@ let rainbow = false;
 let noise = false;
 let colors = Array(constants.colorsNum).fill('ffffff');
 
+function resetToDefault() {
+    code = 0;
+    slowness = 5;
+    partSize = 10;
+    gradient = false;
+    random = false;
+    rainbow = false;
+    noise = false;
+    colors = Array(constants.colorsNum).fill('ffffff');
+}
+
 function setColors(_colors) {
     for (let i = 0; i < constants.colorsNum; i++) {
         // fill the colors array with all colors repetitive
@@ -52,6 +63,14 @@ function newCode() {
 app.post('/setMode', (req, res) => {
     const command = (req.body.value1 || '').toLowerCase().split(' ');
     console.log(command);
+
+    // reset
+    if (utils.hasKeywords(command, constants.reset)) {
+        resetToDefault();
+        console.log('reset');
+        res.send('');
+        return;
+    }
 
     // gradient
     if (utils.hasKeywords(command, constants.kwGradient)) {
