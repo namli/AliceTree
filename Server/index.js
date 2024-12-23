@@ -42,6 +42,7 @@ function setColors(_colors) {
 }
 
 function getMode() {
+    if (code === "FF") return "FF"; // Special handling for turn off code
     let result = code.toString();
     result += utils.n(slowness);
     result += utils.n(partSize);
@@ -70,6 +71,15 @@ app.post('/setMode', (req, res) => {
         console.log('reset');
         res.send('');
         return;
+    }
+
+    // turn off
+    if (utils.hasKeywords(command, constants.kwOff)) {
+      resetToDefault();
+      code = "FF"; // Special code for "turn off"
+      console.log('Turning off LEDs');
+      res.send('');
+      return;
     }
 
     // gradient

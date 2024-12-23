@@ -79,19 +79,21 @@ void loop() {
         return;
     }
 
-    FastLED.clear();
-    if (code < 10) {
+    if (code < 10 && code >= 0) { // Run animation only if code is 0-9
         // led strip animation
+        FastLED.clear(); // Clear the buffer before drawing new data
         for (int s = 0; s < SPEED_COEFF; s++) {
             animateStep();
         }
-    } else {
-        // turn off
+        saveLeds();
+        FastLED.show();
+    } else if (code == 255) { 
+        // Special handling for FF (turn off)
+        FastLED.clear();
+        FastLED.show();
     }
-    saveLeds();
-    FastLED.show();
 
-    loadMode(ct);
+    loadMode(ct); // Load new mode data (this might change 'code')
 
     // estimate time to delay
     unsigned long after = millis();
@@ -141,6 +143,13 @@ void loadMode(unsigned long time) {
  * @param s downloaded data for new mode
  */
 void setMode(String s) {
+    // Check for "turn off" command (code FF)
+    if (s.substring(0, 2) == "FF") {
+      code = 255; // Using 255 to represent FF internally
+      Serial.println("Turning off LEDs.");
+      return;
+    }
+
     byte newCode = s.substring(0, 1).toInt(); // first digit is code
     if (newCode == code) {
         // same mode as current
